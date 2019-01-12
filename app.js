@@ -4,13 +4,15 @@ const fs = require('fs');
 const writeStream = fs.createWriteStream('result.json');
 
 request('https://firstsiteguide.com/about-us/', (err, response, html) => {
-    const $ = cheerio.load(html);
+    if (!err && response.statusCode == 200) {
+        const $ = cheerio.load(html);
 
-    let pObj = {}
-    $("p").each(function(index) {
-        pObj[index] = $(this).text();
-        console.log(index + ": " + $(this).text());
-    });
+        let pObj = {}
+        $("p").each(function(index) {
+            pObj[index] = $(this).text();
+            console.log(index + ": " + $(this).text());
+        });
 
-    writeStream.write(JSON.stringify(pObj));
+        writeStream.write(JSON.stringify(pObj));
+    }
 });
